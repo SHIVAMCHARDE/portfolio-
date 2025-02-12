@@ -279,7 +279,7 @@ function App() {
                   Bachelor of Technology in Computer Engineering
                 </h3>
                 <p className="text-gray-300">Bajaj Institute of Technology</p>
-                <p className="text-gray-300">Expected 2024 • CGPA: 7.98</p>
+                <p className="text-gray-300"> 2024 • CGPA: 7.98</p>
               </motion.div>
               <motion.div
                 className="bg-gray-700 p-6 rounded-lg shadow-lg"
