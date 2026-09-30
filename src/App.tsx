@@ -1,795 +1,367 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
-  Menu,
-  X,
+  ArrowDown,
+  ArrowDownToLine,
+  ArrowRight,
+  ArrowUpRight,
+  Bot,
+  Briefcase,
+  Check,
+  Code2,
+  ExternalLink,
   Github,
   Linkedin,
   Mail,
-  Trophy,
-  Award,
-  Star,
-  Download,
-  Coffee,
-  Globe,
-  Heart,
-  Code,
+  MapPin,
+  Menu,
+  MessageSquareText,
+  X,
 } from "lucide-react";
-import {
-  FaJava,
-  FaHtml5,
-  FaCss3Alt,
-  FaJs,
-  FaReact,
-  FaNodeJs,
-  FaGitAlt,
-  // FaCode,
-} from "react-icons/fa";
-import { SiTailwindcss, SiMongodb, SiPostman, SiExpress } from "react-icons/si"
-import { motion } from "framer-motion";
-import intern from "./study-program.png";
-import { FaGithub } from "react-icons/fa";
-import { FaGraduationCap } from "react-icons/fa"; // Import the icon
-// import profile from "./profile.jpg"; // Ensure you have a profile image in the public folder
-import { FaCode } from "react-icons/fa6";
+import { motion, useScroll, useTransform } from "framer-motion";
+
+const projects = [
+  {
+    number: "01",
+    title: "Multi-Agent AI System for YouTube Comment Automation",
+    category: "AI AUTOMATION · MULTI-AGENT SYSTEMS",
+    description:
+      "A production-minded n8n workflow that uses YouTube Data API and LLMs to analyze comments, detect intent, and filter content—then drafts contextual replies with a RAG-powered agent.",
+    tags: ["n8n", "YouTube Data API", "LLMs", "RAG", "Automation"],
+    link: "https://medium.com/@shivamcharde12/building-a-multi-agent-ai-system-to-automate-youtube-comment-engagement-from-scratch-4924cc9f313a",
+    linkLabel: "Read the article",
+    icon: MessageSquareText,
+  },
+  {
+    number: "02",
+    title: "AI Knowledge Agent Chat Application",
+    category: "RETRIEVAL-AUGMENTED GENERATION",
+    description:
+      "A knowledge assistant designed to provide grounded answers from embedded documents, with persistent conversation memory, semantic search, and an agentic LangChain workflow.",
+    tags: ["RAG", "LangChain", "Embeddings", "Semantic Search", "AI Agents"],
+    link: "#contact",
+    linkLabel: "Ask me about it",
+    icon: Bot,
+  },
+  {
+    number: "03",
+    title: "AI-Powered Journal Chat App",
+    category: "FULL-STACK · GENERATIVE AI",
+    description:
+      "A MERN journaling app where people can chat with Gemini, revisit saved conversations, and receive thoughtful summaries and motivational insights. Includes JWT authentication and user-specific history.",
+    tags: ["MERN", "Gemini API", "MongoDB", "JWT"],
+    link: "https://github.com/SHIVAMCHARDE/AI-Powered-Journal-Chat-App",
+    linkLabel: "View on GitHub",
+    icon: MessageSquareText,
+  },
+  {
+    number: "04",
+    title: "Umeed — Mental Wellness Platform",
+    category: "FULL-STACK · SOCIAL IMPACT",
+    description:
+      "A collaborative self-help platform for mental wellness, with community resources and supportive experiences built using React and MongoDB.",
+    tags: ["React", "MongoDB", "Wellness"],
+    link: "https://github.com/BhaveshAnandpara/Umeed",
+    linkLabel: "View on GitHub",
+    icon: Code2,
+  },
+  {
+    number: "05",
+    title: "Cafe Management System",
+    category: "FULL-STACK WEB APPLICATION",
+    description:
+      "A team-built cafe ordering experience with QR-based customer ordering and interactive React interfaces.",
+    tags: ["React", "JavaScript", "Web App"],
+    link: "https://github.com/SHIVAMCHARDE/Cafe-management-System",
+    linkLabel: "View on GitHub",
+    icon: Code2,
+  },
+  {
+    number: "06",
+    title: "Bajaj Science Education Center",
+    category: "PRODUCTION WEBSITE",
+    description:
+      "Developed website components with React Hooks and connected the frontend to backend data and services.",
+    tags: ["React", "REST APIs", "Production"],
+    link: "https://www.bajajsciencecenter.co.in/",
+    linkLabel: "Visit website",
+    icon: Code2,
+  },
+];
+
+const experience = [
+  {
+    role: "Associate Software Engineer",
+    company: "Definedge",
+    location: "Pune",
+    period: "Oct 2025 — Present",
+    logo: "/definedge-logo.svg",
+    summary: "Software Development, agentic automation",
+    points: [
+      "Designed and built an end-to-end internal stock-market MCP server with FastMCP, connecting 70+ financial APIs and tools for market data and portfolio automation. Added JWT-authenticated sessions and secure buy, sell, modify, and cancel order workflows.",
+      "Engineered agentic AI workflows with RAG and multi-agent systems in n8n, integrating LLMs, Pinecone vector databases, external REST APIs, and custom tools for context-aware internal automation.",
+      "Developed a KYC document-verification solution using DocTR OCR for accurate text extraction and document understanding, automating identity-verification workflows.",
+      "Contribute to U.S.-based client projects, working with stakeholders and cross-functional Agile teams to shape requirements, design scalable architectures, and deliver secure software and AI solutions.",
+      "Build end-to-end AI applications with React, Python, and AI services; optimize inference performance and help deploy reliable, production-ready systems.",
+    ],
+  },
+  {
+    role: "Associate Software Engineer",
+    company: "MaxScripts Technologies",
+    location: "Nagpur",
+    period: "Mar 2025 — Aug 2025",
+    summary: "React.js, TypeScript & full-stack product engineering",
+    points: [
+      "Developed responsive web application interfaces with React.js and TypeScript, shaping product requirements into clean, maintainable user experiences.",
+      "Created reusable UI components and styled consistent layouts with Tailwind CSS, helping features stay cohesive across screen sizes.",
+      "Integrated frontend views with APIs and collaborated with teammates across the application stack to deliver complete product features.",
+      "Worked in cross-functional Agile sprints, contributing to planning, implementation, feedback cycles, and maintainable releases.",
+    ],
+  },
+  {
+    role: "Software Developer Intern",
+    company: "Virtuebyte Pvt Ltd",
+    location: "Pune",
+    period: "Jan 2024 — Jun 2024",
+    summary: "Responsive web applications",
+    points: [
+      "Built responsive client-facing projects using React.js, JavaScript, HTML/CSS, and Tailwind CSS.",
+      "Contributed to feature delivery, testing, technical reviews, and code reviews with cross-functional teams.",
+    ],
+  },
+];
+
+const skillGroups = [
+  {
+    title: "AI & Agent Engineering",
+    skills: ["Python", "LangChain", "RAG", "AI Agents", "MCP", "FastMCP", "n8n", "Pinecone"],
+  },
+  {
+    title: "Backend & Data",
+    skills: ["FastAPI", "Node.js", "Express", "MongoDB", "REST APIs", "JWT", "Postman"],
+  },
+  {
+    title: "Frontend & Tools",
+    skills: ["React", "TypeScript", "JavaScript", "Tailwind CSS", "HTML/CSS", "Git", "GitHub"],
+  },
+];
+
+const navigation = ["About", "Experience", "Projects", "Skills", "Contact"];
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Removed unused setActiveSection state setter
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
-  };
-
-  const staggerChildren = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const achievements = [
-    {
-      title: "Accenture Innovation Challenge 2022",
-      status: "Semi Finalist",
-      icon: <Trophy className="w-8 h-8 text-blue-400" />,
-      description:
-        "Led Team UMEED in developing innovative solutions for psychological medical conditions. Our project stood out among 1 lakh entries, making it to the top 16 teams nationwide. We created a comprehensive platform that addresses mental health challenges through technology, incorporating features like:",
-      points: [
-        "Anonymous peer support communities",
-        "Professional counselor connection platform",
-        "Crisis intervention protocols",
-        "Resource library for mental health education",
-      ],
-    },
-    {
-      title: "Maharashtra Innovation Challenge 2023",
-      status: "District Winner",
-      icon: <Award className="w-8 h-8 text-purple-400" />,
-      description:
-        "Spearheaded a groundbreaking project focused on student mental health and suicide prevention. Our team developed a comprehensive solution that includes:",
-      points: [
-        "Early warning system using behavioral analysis",
-        "Confidential reporting system for at-risk students",
-        "Integration with college counseling services",
-        "Mental health awareness campaign toolkit",
-      ],
-    },
-    {
-      title: "Tech Alchathon 2024",
-      status: "Winner",
-      icon: <Star className="w-8 h-8 text-yellow-400" />,
-      description:
-        "Led frontend development in a team of three, creating an innovative solution for real-world asset management. Key contributions included:",
-      points: [
-        "Responsive dashboard for real-time asset tracking",
-        "Interactive data visualization components",
-        "User-friendly interface for asset management",
-        "Mobile-first design approach",
-      ],
-    },
-  ];
-
-  const projects = [
-    {
-      title: "AI-Powered Journal Chat App (MERN + Gemini)",
-      icon: <FaCode className="w-6 h-6 text-green-400" />,
-      description:
-        "Conversational journaling platform with AI-powered reflection",
-      details:
-        "Built a journaling web app using the MERN stack, enabling users to chat with an AI assistant powered by Gemini API to reflect on their daily experiences. Implemented JWT-based authentication, real-time chat interface, and empathetic AI responses like daily summaries and motivational insights. Stored user-specific conversations in MongoDB for history tracking.",
-      githubLink: "https://github.com/SHIVAMCHARDE/AI-Powered-Journal-Chat-App",
-    },
-    {
-      title: "Umeed",
-      icon: <Heart className="w-6 h-6 text-pink-400" />,
-      description: "A Platform for psychological medical condition",
-      details:
-        "Worked with one team member to develop a web app using the ReactJS framework. Developed the home page, self help group page, solution page. Connected with MongoDB to store information of self-help cards.",
-      githubLink: "https://github.com/BhaveshAnandpara/Umeed",
-    },
-    {
-      title: "Cafe Management System",
-      icon: <Coffee className="w-6 h-6 text-amber-400" />,
-      description: "Web-based software application for cafe management",
-      details:
-        "Collaborated with two other members to create a system where customers can make orders by scanning QR codes. Developed interactive pages using ReactJs.",
-      githubLink: "https://github.com/SHIVAMCHARDE/Cafe-management-System",
-    },
-    {
-      title: "Bajaj Science Education Center",
-      icon: <Globe className="w-6 h-6 text-cyan-400" />,
-      description: "Official website development",
-      details:
-        "Created and integrated various components using React Hooks for efficient state management and data fetching from the backend using ReactJS.",
-      githubLink: "https://www.bajajsciencecenter.co.in/",
-    },
-  ];
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: portraitScrollProgress } = useScroll({
+    target: portraitRef,
+    offset: ["start end", "end start"],
+  });
+  const portraitY = useTransform(portraitScrollProgress, [0, 1], [26, -26]);
+  const portraitRotation = useTransform(portraitScrollProgress, [0, 0.5, 1], [-1.5, 0, 1.2]);
+  const portraitSaturation = useTransform(
+    portraitScrollProgress,
+    [0, 0.5, 1],
+    ["saturate(0.76) contrast(1.02)", "saturate(0.92) contrast(1.025)", "saturate(1) contrast(1.03)"],
+  );
+  const sunlightX = useTransform(portraitScrollProgress, [0, 0.5, 1], [-260, 0, 260]);
+  const sunlightOpacity = useTransform(portraitScrollProgress, [0, 0.28, 0.5, 0.72, 1], [0, 0.18, 0.72, 0.18, 0]);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
-  const handleDownloadResume = () => {
-    const link = document.createElement("a");
-    link.href = "/Resume.pdf"; // File path relative to the `public` folder
-    link.download = "Shivam_Charde_Resume.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
   return (
-    <>
-      <div className="min-h-screen bg-gray-900 text-gray-100">
-        {/* Navbar */}
-        <nav className="fixed w-full bg-gray-800 shadow-lg z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-100">
-                  Shivam Charde
-                </h1>
-              </div>
-
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-8">
-                {[
-                  "About",
-                  "Education",
-                  "Skills",
-                  "Experience",
-                  "Projects",
-                  "Contact",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                  >
-                    {item}
-                  </button>
-                ))}
-                <button
-                  onClick={handleDownloadResume}
-                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  <Download size={16} />
-                  <span>Resume</span>
-                </button>
-              </div>
-
-              {/* Mobile menu button */}
-              <div className="md:hidden flex items-center">
-                <button
-                  onClick={toggleMenu}
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
-                >
-                  {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-              </div>
-            </div>
+    <div className="site-shell">
+      <header className="site-header">
+        <nav className="nav-wrap" aria-label="Main navigation">
+          <a className="brand" href="#about" onClick={() => setIsMenuOpen(false)}>
+            <span className="brand-mark">SC<span>.</span></span>
+            <span>Shivam Charde</span>
+          </a>
+          <div className={`nav-links ${isMenuOpen ? "nav-links-open" : ""}`}>
+            {navigation.map((item) => (
+              <button key={item} onClick={() => scrollToSection(item)}>
+                {item}
+              </button>
+            ))}
+            <a className="nav-cta" href="/Resume.pdf" download="Shivam_Charde_Resume.pdf">
+              <ArrowDownToLine size={15} /> Resume
+            </a>
           </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden bg-gray-800">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {[
-                  "About",
-                  "Education",
-                  "Skills",
-                  "Experience",
-                  "Projects",
-                  "Contact",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
-                  >
-                    {item}
-                  </button>
-                ))}
-                <button
-                  onClick={handleDownloadResume}
-                  className="flex items-center space-x-2 w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-base font-medium transition-colors duration-200"
-                >
-                  <Download size={16} />
-                  <span>Resume</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </nav>
-
-        {/* Main Content */}
-        <div className="pt-16">
-          {/* Hero Section */}
-          {/* <section
-          id="about"
-          className="bg-gradient-to-r from-blue-900 to-purple-900 text-white py-20"
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Shivam Charde
-              </h1>
-              <p className="text-xl mb-6">Web Developer | Software Developer</p>
-              <div className="flex justify-center space-x-6">
-                <motion.a
-                  href="https://github.com/SHIVAMCHARDE"
-                  className="hover:text-gray-300 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Github size={24} />
-                </motion.a>
-                <motion.a
-                  href="https://www.linkedin.com/in/shivamcharde/"
-                  className="hover:text-gray-300 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Linkedin size={24} />
-                </motion.a>
-                <motion.a
-                  href="mailto:shivamcharde12@gmail.com"
-                  className="hover:text-gray-300 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Mail size={24} />
-                </motion.a>
-              </div>
-            </motion.div>
-          </div>
-        </section> */}
-          <section
-            id="about"
-            className="relative text-white py-20 overflow-hidden"
+          <button
+            className="menu-toggle"
+            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {/* Local background video */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute top-0 left-0 w-full h-full object-cover z-0"
+            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </nav>
+      </header>
+
+      <main>
+        <section className="hero section-wrap" id="about">
+          <div className="hero-grid" aria-hidden="true" />
+          <motion.div
+            className="hero-copy"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="availability"><span /> SOFTWARE ENGINEER · APPLIED AI</div>
+            <h1>
+              I build thoughtful <span>software</span> and practical AI systems.
+            </h1>
+            <p className="hero-description">
+              I&apos;m Shivam, a software developer working across full-stack products and applied AI. I turn complex ideas into dependable applications, intelligent workflows, and useful experiences.
+            </p>
+            <div className="hero-domains" aria-label="Areas of focus">
+              <span><Bot size={15} /> AI & agent engineering</span>
+              <i />
+              <span><Code2 size={15} /> Full-stack software</span>
+            </div>
+            <div className="hero-actions">
+              <button className="button-primary" onClick={() => scrollToSection("Projects")}>
+                Explore my work <ArrowRight size={17} />
+              </button>
+              <a className="button-secondary" href="/Resume.pdf" download="Shivam_Charde_Resume.pdf">
+                <ArrowDown size={16} /> Download resume
+              </a>
+            </div>
+            <div className="hero-socials" aria-label="Social links">
+              <a href="https://github.com/SHIVAMCHARDE" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={18} /></a>
+              <a href="https://www.linkedin.com/in/shivamcharde/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="mailto:shivamcharde12@gmail.com" aria-label="Email"><Mail size={18} /></a>
+              <span className="social-divider" />
+              <span className="hero-location"><MapPin size={14} /> Pune, India</span>
+            </div>
+          </motion.div>
+          <motion.div
+            className="hero-visual"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+          >
+            <motion.div
+              className="portrait-frame"
+              ref={portraitRef}
+              style={{ y: portraitY, rotate: portraitRotation }}
             >
-              <source src="/coding-bg.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+              <motion.img src="/profile.png" alt="Portrait of Shivam Charde" style={{ filter: portraitSaturation }} />
+              <motion.div className="portrait-sunlight" aria-hidden="true" style={{ x: sunlightX, opacity: sunlightOpacity }} />
+              <div className="portrait-caption"><span>My focus</span><strong>AI + software, built thoughtfully.</strong></div>
+            </motion.div>
+            <div className="floating-card"><span className="floating-icon"><Bot size={18} /></span><span><small>BUILDING ACROSS</small><strong>AI systems + software</strong></span><span className="live-dot" /></div>
+            <div className="visual-orbit orbit-one" />
+            <div className="visual-orbit orbit-two" />
+          </motion.div>
+          <div className="hero-bottom"><span>SCROLL TO DISCOVER</span><div /></div>
+        </section>
 
-            {/* Gradient/Dark Overlay for readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 z-10" />
+        <section className="intro-strip" aria-label="Introduction">
+          <div className="section-wrap intro-inner">
+            <span className="eyebrow">A LITTLE ABOUT ME</span>
+            <p>From smart workflows to full-stack products, I enjoy making AI <em>useful, dependable, and ready for the real world.</em></p>
+            <span className="intro-icon"><Code2 size={23} /></span>
+          </div>
+        </section>
 
-            {/* Actual content */}
-            <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                {/* Circular profile image */}
-                <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                  <img
-                    src="/profile.png"
-                    alt="Shivam Charde"
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  Shivam Charde
-                </h1>
-                <p className="text-xl mb-6">
-                  Web Developer | Software Developer
-                </p>
-
-                <div className="flex justify-center space-x-6">
-                  <motion.a
-                    href="https://github.com/SHIVAMCHARDE"
-                    className="hover:text-gray-300 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Github size={24} />
-                  </motion.a>
-                  <motion.a
-                    href="https://www.linkedin.com/in/shivamcharde/"
-                    className="hover:text-gray-300 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin size={24} />
-                  </motion.a>
-                  <motion.a
-                    href="mailto:shivamcharde12@gmail.com"
-                    className="hover:text-gray-300 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Mail size={24} />
-                  </motion.a>
-                </div>
-              </motion.div>
-            </div>
-          </section>
- <section id="experience" className="py-16 bg-gray-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2
-                className="text-3xl font-bold text-white mb-8"
-                initial={{ opacity: 0, y: 20 }}
+        <section className="section-wrap section-block" id="experience">
+          <div className="section-heading">
+            <div><span className="eyebrow">WHERE I&apos;VE MADE AN IMPACT</span><h2>Experience<span>.</span></h2></div>
+            <p>Building dependable software, one thoughtful iteration at a time.</p>
+          </div>
+          <div className="experience-list">
+            {experience.map((job, index) => (
+              <motion.article
+                className="experience-card"
+                key={job.company}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.45, delay: index * 0.08 }}
               >
-                Experience
-              </motion.h2>
-
-              {/* Job Experience */}
-              <motion.div
-                className="bg-gray-700 p-4 sm:p-6 rounded-lg shadow-lg mb-6"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-100 flex items-center gap-2">
-                    <Code className="w-5 sm:w-6 text-blue-400" />
-                    Associate Software Engineer
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-300 font-medium text-left sm:text-right">
-                    MaxScripts Technologies, Nagpur
-                    <br className="block sm:hidden" />
-                    <span className="sm:ml-2">March 2025 – Present</span>
-                  </p>
+                <div className="experience-date">{job.period}</div>
+                <div className="experience-main">
+                  <div className="experience-title-row">
+                    {job.logo ? <img className="company-logo" src={job.logo} alt="Definedge logo" /> : <span className="company-icon"><Briefcase size={19} /></span>}
+                    <div><h3>{job.role}</h3><p>{job.company} <span>·</span> {job.location}</p></div>
+                  </div>
+                  <p className="experience-summary">{job.summary}</p>
+                  <ul>{job.points.map((point) => <li key={point}><Check size={15} /><span>{point}</span></li>)}</ul>
                 </div>
+              </motion.article>
+            ))}
+          </div>
+        </section>
 
-                <div className="mt-3 sm:mt-4 space-y-2 text-sm sm:text-base text-gray-300 font-medium">
-                  {[
-                    "Developing responsive front-end applications using React.js and TypeScript",
-                    "Creating UI components with Tailwind CSS and integrating REST APIs",
-                    "Working closely with designers and backend engineers for smooth UX",
-                    "Writing clean, scalable code and performing peer code reviews",
-                    "Contributing to feature planning and sprint cycles in agile workflow",
-                  ].map((point, index) => (
-                    <div key={index} className="flex items-start gap-2">
-                      <span className="text-blue-400 flex-shrink-0">•</span>
-                      <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Internship Experience */}
-              <motion.div
-                className="bg-gray-700 p-4 sm:p-6 rounded-lg shadow-lg"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-100 flex items-center gap-2">
-                    <img
-                      src={intern}
-                      alt="Frontend Intern"
-                      className="w-8 sm:w-10 h-auto"
-                    />
-                    Frontend Development Intern
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-300 font-medium text-left sm:text-right">
-                    Virtuebyte Pvt Ltd, Pune
-                    <br className="block sm:hidden" />
-                    <span className="sm:ml-2">Jan 2024 – Jun 2024</span>
-                  </p>
-                </div>
-
-                <div className="mt-3 sm:mt-4 space-y-2 text-sm sm:text-base text-gray-300 font-medium">
-                  {[
-                    "Expertise in front-end technologies such as React.js, HTML, Tailwind CSS, JavaScript",
-                    "Participated in Tech Review meetings, software development, testing, and code reviews",
-                    "Worked on real-life client projects and training programs",
-                    "Collaborated with cross-functional teams to design, develop, and implement new features",
-                    "Contributed significantly to web app development with strong technical and problem-solving skills",
-                  ].map((point, index) => (
-                    <div key={index} className="flex items-start gap-2">
-                      <span className="text-blue-400 flex-shrink-0">•</span>
-                      <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+        <section className="projects-section" id="projects">
+          <div className="section-wrap section-block">
+            <div className="section-heading">
+              <div><span className="eyebrow">SELECTED WORK · 2024—2026</span><h2>Projects<span>.</span></h2></div>
+              <p>Experiments and products at the intersection of AI and everyday workflows.</p>
             </div>
-          </section>
-       
-          {/* Skills Section */}
- <section
-  id="skills"
-  className="relative text-white py-16 overflow-hidden"
->
-  {/* Background Video */}
-  <video
-    autoPlay
-    muted
-    loop
-    playsInline
-    className="absolute top-0 left-0 w-full h-full object-cover z-0"
-  >
-    <source src="/coding-bg.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  {/* Dark Overlay */}
-  <div className="absolute inset-0 bg-black/60 z-10" />
-
-  {/* Content */}
-  <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <motion.h2
-      className="text-3xl font-bold text-gray-100 mb-8"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      <div className="flex flex-row items-center gap-3">
-        <FaCode className="text-3xl text-blue-400" />
-        Skills
-      </div>
-    </motion.h2>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* Languages */}
-      <motion.div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg bg-opacity-100"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-xl font-semibold mb-4 text-gray-100">Languages</h3>
-        <div className="space-y-2 text-gray-300">
-          <div className="flex items-center gap-3">
-            <FaJava className="text-[#f89820]" /> Java
-          </div>
-          <div className="flex items-center gap-3">
-            <FaHtml5 className="text-[#e34c26]" /> HTML
-          </div>
-          <div className="flex items-center gap-3">
-            <FaCss3Alt className="text-[#264de4]" /> CSS
-          </div>
-          <div className="flex items-center gap-3">
-            <FaJs className="text-[#f0db4f]" /> JavaScript
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Frameworks */}
-      <motion.div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg bg-opacity-100"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-xl font-semibold mb-4 text-gray-100">
-          Technologies & Frameworks
-        </h3>
-        <div className="space-y-2 text-gray-300">
-          <div className="flex items-center gap-3">
-            <FaReact className="text-[#61dafb]" /> React.js
-          </div>
-          <div className="flex items-center gap-3">
-            <FaNodeJs className="text-[#3c873a]" /> Node.js
-          </div>
-           <div className="flex items-center gap-3">
-      <SiExpress className="text-white" /> Express.js
-    </div>
-          <div className="flex items-center gap-3">
-            <SiMongodb className="text-[#47A248]" /> MongoDB
-          </div>
-          <div className="flex items-center gap-3">
-            <SiTailwindcss className="text-[#38bdf8]" /> Tailwind CSS
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Others */}
-      <motion.div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg bg-opacity-100"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-xl font-semibold mb-4 text-gray-100">Others</h3>
-        <div className="space-y-2 text-gray-300">
-          <div className="flex items-center gap-3">
-            <SiPostman className="text-[#FF6C37]" /> Postman
-          </div>
-          <div className="flex items-center gap-3">
-            <FaGitAlt className="text-[#f1502f]" /> Git
-          </div>
-          <div className="flex items-center gap-3">
-            <FaGithub className="text-white" /> GitHub
-          </div>
-          {/* <div className="flex items-center gap-3">
-            <FaLinux className="text-[#fcd000]" /> Linux
-          </div> */}
-        </div>
-      </motion.div>
-    </div>
-  </div>
-</section>
-         
-
-          {/* Projects Section */}
-         <section id="projects" className="py-16 bg-gray-900">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <motion.h2
-      className="text-3xl font-bold text-white mb-8"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      Projects
-    </motion.h2>
-
-    <div className="space-y-8">
-      {projects.map((project, index) => (
-        <motion.div
-          key={index}
-          className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-[1.02] transition-transform duration-300"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.2 }}
-        >
-          <div className="flex items-start space-x-4">
-            <div className="flex-shrink-0">{project.icon}</div>
-            <div className="flex-1">
-              <h3 className="text-xl font-semibold text-white flex items-center space-x-2">
-                <a
-                  href={project.githubLink || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white"
-                >
-                  <FaGithub className="w-6 h-6" />
-                </a>
-                <span>{project.title}</span>
-              </h3>
-              <p className="text-blue-400 font-medium mt-2">
-                {project.description}
-              </p>
-              <p className="text-gray-300 mt-2">{project.details}</p>
-            </div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</section>
-
-
-   {/* Education Section */}
-        <section id="education" className="relative py-16 overflow-hidden">
-  {/* Background Video (bottom layer) */}
-  <video
-    autoPlay
-    muted
-    loop
-    playsInline
-    className="absolute top-0 left-0 w-full h-full object-cover z-0"
-  >
-    <source src="/coding-bg.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  {/* Dark Overlay (middle layer for readability) */}
-  <div className="absolute inset-0 bg-black/60 z-10" />
-
-  {/* Content (top layer) */}
-  <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <motion.h2
-      className="text-3xl font-bold text-white mb-8 flex items-center gap-2"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      <FaGraduationCap className="text-3xl" />
-      Education
-    </motion.h2>
-
-    <div className="space-y-8">
-      <motion.div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg bg-opacity-100"
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-xl font-semibold text-white">
-          Bachelor of Technology in Computer Engineering
-        </h3>
-        <p className="text-gray-300">Bajaj Institute of Technology</p>
-        <p className="text-gray-300">2024 • CGPA: 7.98</p>
-      </motion.div>
-
-      <motion.div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg bg-opacity-100"
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2 }}
-        viewport={{ once: true }}
-      >
-        <h3 className="text-xl font-semibold text-white">
-          Higher Secondary School Certificate (HSC)
-        </h3>
-        <p className="text-gray-300">
-          Gandhi City Public School and Junior College
-        </p>
-        <p className="text-gray-300">2020 • Percentage: 74.46%</p>
-      </motion.div>
-    </div>
-  </div>
-</section>
-
-
-          {/* Achievements Section */}
-          <section id="achievements" className="py-16 bg-gray-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2
-                className="text-3xl font-bold text-gray-100 mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                Achievements
-              </motion.h2>
-              <motion.div
-                className="space-y-8"
-                variants={staggerChildren}
-                initial="initial"
-                whileInView="animate"
-                viewport={{ once: true }}
-              >
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    className="bg-gray-700 rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300"
-                    variants={fadeIn}
+            <div className="project-grid">
+              {projects.map((project, index) => {
+                const ProjectIcon = project.icon;
+                return (
+                  <motion.article
+                    className="project-card"
+                    key={project.number}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.45, delay: (index % 2) * 0.1 }}
                   >
-                    <div className="p-6 space-y-4">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">{achievement.icon}</div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-100">
-                            {achievement.title}
-                          </h3>
-                          <p className="text-blue-400 font-medium">
-                            {achievement.status}
-                          </p>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-300 leading-relaxed">
-                        {achievement.description}
-                      </p>
-
-                      <ul className="space-y-2">
-                        {achievement.points.map((point, idx) => (
-                          <motion.li
-                            key={idx}
-                            className="flex items-start space-x-2 text-gray-300"
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.1 }}
-                            viewport={{ once: true }}
-                          >
-                            <span className="text-blue-400 flex-shrink-0">
-                              •
-                            </span>
-                            <span>{point}</span>
-                          </motion.li>
-                        ))}
-                      </ul>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </section>
-
-          {/* Contact Section */}
-          <section id="contact" className="relative py-16 overflow-hidden">
-            {/* Background Video */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute top-0 left-0 w-full h-full object-cover z-0"
-            >
-              <source src="/coding-bg.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-
-            {/* Dark Overlay for readability */}
-            <div className="absolute inset-0 bg-black/60 z-10" />
-
-            {/* Content */}
-            <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2
-                className="text-3xl font-bold text-white mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                Contact
-              </motion.h2>
-
-              <motion.div
-                className="bg-gray-900 p-6 rounded-lg shadow-lg"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Mail className="text-gray-300" size={20} />
-                    <a
-                      href="mailto:shivamcharde12@gmail.com"
-                      className="text-blue-400 hover:text-blue-300"
-                    >
-                      shivamcharde12@gmail.com
+                    <div className="project-topline"><span>{project.number}</span><span className="project-icon"><ProjectIcon size={19} /></span></div>
+                    <p className="project-category">{project.category}</p>
+                    <h3>{project.title}</h3>
+                    <p className="project-description">{project.description}</p>
+                    <div className="project-tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+                    <a className="project-link" href={project.link} target={project.link.startsWith("http") ? "_blank" : undefined} rel={project.link.startsWith("http") ? "noreferrer" : undefined}>
+                      {project.linkLabel} <ExternalLink size={15} />
                     </a>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <p className="text-gray-300">📱 +91 8767050834</p>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <p className="text-gray-300">
-                      📍Nagpur, Maharashtra, India
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+                  </motion.article>
+                );
+              })}
             </div>
-          </section>
-        </div>
-      </div>
-    </>
+          </div>
+        </section>
+
+        <section className="section-wrap section-block skills-section" id="skills">
+          <div className="section-heading">
+            <div><span className="eyebrow">MY TOOLKIT</span><h2>Skills & tools<span>.</span></h2></div>
+            <p>The right tool for the problem—grounded in solid engineering fundamentals.</p>
+          </div>
+          <div className="skills-grid">
+            {skillGroups.map((group, index) => (
+              <motion.article className="skill-card" key={group.title} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+                <span className="skill-index">0{index + 1}</span>
+                <h3>{group.title}</h3>
+                <div className="skill-tags">{group.skills.map((skill) => <span key={skill}>{skill}</span>)}</div>
+              </motion.article>
+            ))}
+          </div>
+          <div className="education-card"><div className="education-icon"><Code2 size={19} /></div><div><span className="eyebrow">EDUCATION</span><h3>B.Tech, Computer Engineering</h3><p>Bajaj Institute of Technology <span>·</span> 2024 <span>·</span> 7.98 CGPA</p></div></div>
+        </section>
+
+        <section className="contact-section" id="contact">
+          <div className="section-wrap contact-inner">
+            <div><span className="eyebrow">HAVE A GOOD PROBLEM TO SOLVE?</span><h2>Let&apos;s build something<br /><span>meaningful.</span></h2><p>Open to conversations about AI engineering, agentic systems, and full-stack product work.</p></div>
+            <div className="contact-actions">
+              <a className="button-primary" href="mailto:shivamcharde12@gmail.com">Say hello <ArrowUpRight size={17} /></a>
+              <a href="mailto:shivamcharde12@gmail.com" className="contact-email">shivamcharde12@gmail.com</a>
+              <span><MapPin size={15} /> Pune, Maharashtra, India</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer section-wrap">
+        <a className="brand" href="#about"><span className="brand-mark">SC<span>.</span></span><span>Shivam Charde</span></a>
+        <span>Designed & built with care <span className="footer-heart">♥</span></span>
+        <div className="footer-links"><a href="https://github.com/SHIVAMCHARDE" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={17} /></a><a href="https://www.linkedin.com/in/shivamcharde/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={17} /></a></div>
+      </footer>
+    </div>
   );
 }
 
