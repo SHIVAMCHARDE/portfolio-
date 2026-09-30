@@ -100,8 +100,9 @@ const experience = [
       "Designed and built an end-to-end internal stock-market MCP server with FastMCP, connecting 70+ financial APIs and tools for market data and portfolio automation. Added JWT-authenticated sessions and secure buy, sell, modify, and cancel order workflows.",
       "Engineered agentic AI workflows with RAG and multi-agent systems in n8n, integrating LLMs, Pinecone vector databases, external REST APIs, and custom tools for context-aware internal automation.",
       "Developed a KYC document-verification solution using DocTR OCR for accurate text extraction and document understanding, automating identity-verification workflows.",
-      "Contribute to U.S.-based client projects, working with stakeholders and cross-functional Agile teams to shape requirements, design scalable architectures, and deliver secure software and AI solutions.",
+      "Contribute and working with stakeholders and cross-functional Agile teams to shape requirements, design scalable architectures, and deliver secure software and AI solutions.",
       "Build end-to-end AI applications with React, Python, and AI services; optimize inference performance and help deploy reliable, production-ready systems.",
+      "Worked on n8n automation workflows to automate business processes, API integrations, data processing, notifications, and AI-powered tasks, reducing manual effort and improving workflow efficiency.",
     ],
   },
   {
